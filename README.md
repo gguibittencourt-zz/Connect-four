@@ -1,4 +1,4 @@
-# Connect-four with minmax alpha beta pruning* #
+# Connect-four with minmax alpha beta pruning #
 
 This project has a implementation of minmax alpha beta pruning algorithm that solve the connect-four problem.
 
