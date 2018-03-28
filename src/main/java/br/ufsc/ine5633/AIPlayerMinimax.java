@@ -1,8 +1,6 @@
 package br.ufsc.ine5633;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 
 import static java.lang.Math.min;
 
@@ -13,12 +11,14 @@ public class AIPlayerMinimax extends AIPlayer {
 
     private int evalueteCount = 0;
     private int nodesWon = 0;
+    private Collection<Integer> allNodes;
 
     /**
      * Constructor with the given game board
      */
     public AIPlayerMinimax(Board board, Seed mySeed) {
         super(board, mySeed);
+        this.allNodes = new ArrayList<>();
     }
 
     /**
@@ -29,8 +29,8 @@ public class AIPlayerMinimax extends AIPlayer {
         this.addSeedsCount();
         int[] result = minimax(this.getDepth(), mySeed, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
-
         System.out.println("\n\nForam avaliados " + this.evalueteCount + " nodos");
+        this.allNodes.add(evalueteCount);
         this.evalueteCount = 0;
         System.out.println(this.nodesWon + " nodos eram vitória");
         this.nodesWon = 0;
@@ -38,6 +38,13 @@ public class AIPlayerMinimax extends AIPlayer {
 
         // depth, max-turn, alpha, beta
         return result[1];   // col
+    }
+
+    public void printFinalAverageNodes() {
+        long allNodes = (long) this.allNodes.stream()
+                .mapToDouble(n -> n)
+                .average().getAsDouble();
+        System.out.println(String.format("\nMédia do total de iterações: %d", allNodes));
     }
 
     /**

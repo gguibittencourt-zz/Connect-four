@@ -35,6 +35,8 @@ public class Main {
             hasWinner = board.hasWon();
         }
 
+        IA.printFinalAverageNodes();
+
         System.out.println(String.format("\n%s venceu!", player.equals(Seed.PLAYER_2) ? "Você" : "O computador"));
         scan.close();
     }
