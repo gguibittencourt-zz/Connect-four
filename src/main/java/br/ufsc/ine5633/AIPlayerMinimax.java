@@ -1,9 +1,8 @@
 package br.ufsc.ine5633;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 import static java.lang.Math.min;
 
@@ -47,7 +46,7 @@ public class AIPlayerMinimax extends AIPlayer {
      */
     private int[] minimax(int depth, Seed player, int alpha, int beta) {
         // Generate possible next moves in a list of int[2] of {row, col}.
-        List<Coordinate> nextMoves = generateMoves();
+        Collection<Coordinate> nextMoves = generateMoves();
 
         // mySeed is maximizing; while oppSeed is minimizing
         int score;
@@ -93,8 +92,8 @@ public class AIPlayerMinimax extends AIPlayer {
      * Find all valid next moves.
      * Return Set of moves in int[2] of {row, col} or empty set if gameover
      */
-    private List<Coordinate> generateMoves() {
-        List<Coordinate> nextMoves = new LinkedList<>(); // allocate List
+    private Collection<Coordinate> generateMoves() {
+        Collection<Coordinate> nextMoves = new LinkedList<>(); // allocate List
 
         // If gameover, i.e., no next move
         if (this.board.hasWon()) {
@@ -102,8 +101,7 @@ public class AIPlayerMinimax extends AIPlayer {
             return nextMoves;   // return empty list
         }
 
-
-        int centralCol = Double.valueOf(Math.floor(this.COLS/2)).intValue();
+        int centralCol = Double.valueOf(Math.floor(this.COLS / 2)).intValue();
         int distanceFromCenter = 1;
 
         // verifica e adiciona coluna central
@@ -121,14 +119,12 @@ public class AIPlayerMinimax extends AIPlayer {
         return nextMoves;
     }
 
-    private void addMoveIfFirstIsEmpty(List<Coordinate> nextMoves, int col) {
-        Cell firstEmptyCel = null;
-        firstEmptyCel = this.getFirstEmptyCell(this.board.getColumn(col));
+    private void addMoveIfFirstIsEmpty(Collection<Coordinate> nextMoves, int col) {
+        Cell firstEmptyCel = this.getFirstEmptyCell(this.board.getColumn(col));
         if (firstEmptyCel != null) {
             nextMoves.add(firstEmptyCel.getPosition());
         }
     }
-
 
     private int evaluate() {
         this.evalueteCount++;
@@ -162,7 +158,6 @@ public class AIPlayerMinimax extends AIPlayer {
                 } else {
                     firstDifferent = getNextDifferentIndex(setOfFour);
                 }
-
                 columnIdx += min(firstEmpty, firstDifferent);
             }
         }
@@ -358,9 +353,9 @@ public class AIPlayerMinimax extends AIPlayer {
     }
 
     private Cell getFirstEmptyCell(Cell[] col) {
-        for (int i = 0; i < col.length; i++) {
-            if (col[i].getContent() == Seed.EMPTY) {
-                return col[i];
+        for (Cell aCol : col) {
+            if (aCol.getContent() == Seed.EMPTY) {
+                return aCol;
             }
         }
         return null;
@@ -393,5 +388,4 @@ public class AIPlayerMinimax extends AIPlayer {
         }
         return row.length;
     }
-
 }

@@ -1,6 +1,7 @@
 package br.ufsc.ine5633;
 
-public class Group {
+public class
+ * Created by NilGroup {
     private Seed seed;
     private int countSeeds;
     private int countEmptys;

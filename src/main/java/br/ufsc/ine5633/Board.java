@@ -53,11 +53,10 @@ public class Board {
     }
 
     public void addInColumn(Integer chosenColumn, Seed value) {
-        Integer columnIndex = chosenColumn;
-        Cell[] column = this.cells[columnIndex];
+        Cell[] column = this.cells[chosenColumn];
         for (int rowIndex = 0; rowIndex < column.length; rowIndex++) {
             if (column[rowIndex].getContent() == Seed.EMPTY) {
-                this.lastMovement = this.cells[columnIndex][rowIndex].setContent(value);
+                this.lastMovement = this.cells[chosenColumn][rowIndex].setContent(value);
                 break;
             }
         }
@@ -73,7 +72,6 @@ public class Board {
                     this.checkWonHorizontal(lastMovement.getContent(), lastMovement.getPosition().getCoordX(), lastMovement.getPosition().getCoordY()) ||
                     this.checkWonDiagonalDireita(lastMovement.getContent(), lastMovement.getPosition().getCoordX(), lastMovement.getPosition().getCoordY()) ||
                     this.checkWonDiagonalEsquerda(lastMovement.getContent(), lastMovement.getPosition().getCoordX(), lastMovement.getPosition().getCoordY());
-
         } else {
             return false;
         }
@@ -122,8 +120,8 @@ public class Board {
 
         int colBegin = col - 1;
         int rowBegin = row - 1;
-//Avaliacao a esquerda da peça jogada
-        while(colBegin > -1 && rowBegin > -1){
+//Avaliacao a esquerda da peca jogada
+        while (colBegin > -1 && rowBegin > -1) {
             if (this.getCell(colBegin, rowBegin).getContent() != seed) break;
             countSeedsGrouped++;
             colBegin--;
@@ -132,9 +130,11 @@ public class Board {
 
         colBegin = col + 1;
         rowBegin = row + 1;
-//Avaliacao a direita da peça jogada
-        while(colBegin < COLS && rowBegin < ROWS){
-            if (this.getCell(colBegin, rowBegin).getContent() != seed) break;
+//Avaliacao a direita da peca jogada
+        while (colBegin < COLS && rowBegin < ROWS) {
+            if (this.getCell(colBegin, rowBegin).getContent() != seed) {
+                break;
+            }
             countSeedsGrouped++;
             colBegin++;
             rowBegin++;
@@ -148,8 +148,8 @@ public class Board {
 
         int colBegin = col - 1;
         int rowBegin = row + 1;
-//Avaliacao a esquerda da peça jogada
-        while(colBegin > -1 && rowBegin < ROWS){
+//Avaliacao a esquerda da peca jogada
+        while (colBegin > -1 && rowBegin < ROWS) {
             if (this.getCell(colBegin, rowBegin).getContent() != seed) break;
             countSeedsGrouped++;
             colBegin--;
@@ -158,8 +158,8 @@ public class Board {
 
         colBegin = col + 1;
         rowBegin = row - 1;
-//Avaliacao a direita da peça jogada
-        while(colBegin < COLS && rowBegin > -1){
+//Avaliacao a direita da peca jogada
+        while (colBegin < COLS && rowBegin > -1) {
             if (this.getCell(colBegin, rowBegin).getContent() != seed) break;
             countSeedsGrouped++;
             colBegin++;

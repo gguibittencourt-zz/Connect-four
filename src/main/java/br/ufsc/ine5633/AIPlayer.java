@@ -42,11 +42,11 @@ public abstract class AIPlayer {
      */
     abstract int move();  // to be implemented by subclasses
 
-    protected void addSeedsCount(){
+    protected void addSeedsCount() {
         this.countSeeds++;
     }
 
-    protected int getDepth(){
+    protected int getDepth() {
         return this.depth + (this.countSeeds / 4) < 10 ? this.depth + (this.countSeeds / 4) : 10;
     }
 }

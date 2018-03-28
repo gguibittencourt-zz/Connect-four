@@ -33,9 +33,7 @@ public class Coordinate {
         if (o == null || getClass() != o.getClass()) return false;
 
         Coordinate that = (Coordinate) o;
-
-        if (coordX != null ? !coordX.equals(that.coordX) : that.coordX != null) return false;
-        return coordY != null ? coordY.equals(that.coordY) : that.coordY == null;
-
+        return (coordX != null ? coordX.equals(that.coordX) : that.coordX == null) &&
+                (coordY != null ? coordY.equals(that.coordY) : that.coordY == null);
     }
 }
