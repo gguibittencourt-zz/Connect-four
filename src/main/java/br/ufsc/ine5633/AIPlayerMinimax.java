@@ -1,6 +1,9 @@
 package br.ufsc.ine5633;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import static java.lang.Math.min;
 
@@ -12,12 +15,14 @@ public class AIPlayerMinimax extends AIPlayer {
     private int evalueteCount = 0;
     private int nodesWon = 0;
     private Collection<Integer> allNodes;
+    private final boolean hasPrunning;
 
     /**
      * Constructor with the given game board
      */
-    public AIPlayerMinimax(Board board, Seed mySeed) {
+    public AIPlayerMinimax(Board board, Seed mySeed, boolean hasPrunning) {
         super(board, mySeed);
+        this.hasPrunning = hasPrunning;
         this.allNodes = new ArrayList<>();
     }
 
@@ -27,7 +32,9 @@ public class AIPlayerMinimax extends AIPlayer {
     @Override
     int move() {
         this.addSeedsCount();
-        int[] result = minimax(this.getDepth(), mySeed, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        int[] result = this.hasPrunning
+                ? minimaxWithAlfaBeta(this.getDepth(), mySeed, Integer.MIN_VALUE, Integer.MAX_VALUE)
+                : minimax(this.getDepth(), mySeed);
 
         System.out.println("\n\nForam avaliados " + this.evalueteCount + " nodos");
         this.allNodes.add(evalueteCount);
@@ -48,10 +55,55 @@ public class AIPlayerMinimax extends AIPlayer {
     }
 
     /**
-     * Recursive minimax at level of depth for either maximizing or minimizing player.
+     * Recursive minimaxWithAlfaBeta at level of depth for either maximizing or minimizing player.
      * Return int[3] of {score, row, col}
      */
-    private int[] minimax(int depth, Seed player, int alpha, int beta) {
+    private int[] minimax(int depth, Seed player) {
+        // Generate possible next moves in a List of int[2] of {row, col}.
+        Collection<Coordinate> nextMoves = generateMoves();
+
+        // mySeed is maximizing; while oppSeed is minimizing
+        int bestScore = (player == mySeed) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        int currentScore;
+        int bestRow = -1;
+        int bestCol = -1;
+
+        if (nextMoves.isEmpty() || depth == 0) {
+            // Gameover or depth reached, evaluate score
+            bestScore = evaluate();
+        } else {
+            for (Coordinate move : nextMoves) {
+                // try this move for the current "player"
+                Cell nextCell = this.board.getCell(move);
+                nextCell.setContent(player);
+                this.board.setLastMovement(nextCell);
+                if (player == mySeed) {  // mySeed (computer) is maximizing player
+                    currentScore = minimax(depth - 1, oppSeed)[0];
+                    if (currentScore > bestScore) {
+                        bestScore = currentScore;
+                        bestRow = move.getCoordX();
+                        bestCol = move.getCoordY();
+                    }
+                } else {  // oppSeed is minimizing player
+                    currentScore = minimax(depth - 1, mySeed)[0];
+                    if (currentScore < bestScore) {
+                        bestScore = currentScore;
+                        bestRow = move.getCoordX();
+                        bestCol = move.getCoordY();
+                    }
+                }
+                // undo move
+                nextCell.setContent(Seed.EMPTY);
+            }
+        }
+        return new int[]{bestScore, bestRow, bestCol};
+    }
+
+    /**
+     * Recursive minimaxWithAlfaBeta at level of depth for either maximizing or minimizing player.
+     * Return int[3] of {score, row, col}
+     */
+    private int[] minimaxWithAlfaBeta(int depth, Seed player, int alpha, int beta) {
         // Generate possible next moves in a list of int[2] of {row, col}.
         Collection<Coordinate> nextMoves = generateMoves();
 
@@ -74,13 +126,13 @@ public class AIPlayerMinimax extends AIPlayer {
                 nextCell.setContent(player);
                 this.board.setLastMovement(nextCell);
                 if (player == mySeed) {  // mySeed (computer) is maximizing player
-                    score = minimax(depth - 1, oppSeed, alpha, beta)[0];
+                    score = minimaxWithAlfaBeta(depth - 1, oppSeed, alpha, beta)[0];
                     if (score > alpha) {
                         alpha = score;
                         bestCol = move.getCoordX();
                     }
                 } else {  // oppSeed is minimizing player
-                    score = minimax(depth - 1, mySeed, alpha, beta)[0];
+                    score = minimaxWithAlfaBeta(depth - 1, mySeed, alpha, beta)[0];
                     if (score < beta) {
                         beta = score;
                         bestCol = move.getCoordX();

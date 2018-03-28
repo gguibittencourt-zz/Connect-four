@@ -12,9 +12,9 @@ package br.ufsc.ine5633;
  * Assume that next move is available, i.e., not game-over yet.
  */
 public abstract class AIPlayer {
-    protected int ROWS = GameMain.ROWS;  // number of rows
-    protected int COLS = GameMain.COLS;  // number of columns
-    protected int depth = GameMain.DEPTH;  // profundidade para investigar
+    protected int ROWS = GameProperties.ROWS;  // number of rows
+    protected int COLS = GameProperties.COLS;  // number of columns
+    protected int depth = GameProperties.DEPTH;  // profundidade para investigar
     protected int countSeeds = 0;
 
     protected Board board; // the game board

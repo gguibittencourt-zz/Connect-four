@@ -4,41 +4,44 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
-import static br.ufsc.ine5633.GameMain.COLS;
-import static br.ufsc.ine5633.GameMain.ROWS;
+import static br.ufsc.ine5633.GameProperties.COLS;
+import static br.ufsc.ine5633.GameProperties.ROWS;
 import static java.lang.String.format;
 
 public class Main {
 
-    public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        Board board = new Board(COLS, ROWS);
-        AIPlayerMinimax IA = new AIPlayerMinimax(board, Seed.PLAYER_2);
-        Boolean hasWinner = false;
+    private static final Board BOARD = new Board(COLS, ROWS);
+    private static final Scanner SCAN = new Scanner(System.in);
 
-        Boolean humanFirst = readFirstPlayer(scan);
+    public static void main(String[] args) {
+        Boolean hasWinner = false;
+        Boolean hasPrunning = selectGameMode(SCAN);
+        Boolean humanFirst = readFirstPlayer(SCAN);
+
+        AIPlayerMinimax IA = new AIPlayerMinimax(BOARD, Seed.PLAYER_2, hasPrunning);
+
         Seed player = humanFirst ? Seed.PLAYER_1 : Seed.PLAYER_2;
 
-        printBoard(board);
+        printBoard(BOARD);
         while (!hasWinner) {
             Integer chosenColumn;
             if (player == Seed.PLAYER_1) {
-                chosenColumn = readColumn(scan);
-                board.addInColumn(chosenColumn - 1, player);
+                chosenColumn = readColumn(SCAN);
+                BOARD.addInColumn(chosenColumn - 1, player);
                 player = Seed.PLAYER_2;
             } else {
                 chosenColumn = IA.move();
-                board.addInColumn(chosenColumn, player);
+                BOARD.addInColumn(chosenColumn, player);
                 player = Seed.PLAYER_1;
             }
-            printBoard(board);
-            hasWinner = board.hasWon();
+            printBoard(BOARD);
+            hasWinner = BOARD.hasWon();
         }
 
         IA.printFinalAverageNodes();
 
         System.out.println(String.format("\n%s venceu!", player.equals(Seed.PLAYER_2) ? "Você" : "O computador"));
-        scan.close();
+        SCAN.close();
     }
 
     private static Integer readColumn(Scanner scan) {
@@ -46,15 +49,34 @@ public class Main {
         boolean valid = false;
 
         while (input == null || !valid) {
-            System.out.print(GameMain.MSG_CHOOSE_COLUMN);
+            System.out.print(GameProperties.MSG_CHOOSE_COLUMN);
             input = scan.next();
 
             valid = input.matches("[1-7]");
             if (!valid) {
-                System.out.println(GameMain.MSG_INVALID);
+                System.out.println(GameProperties.MSG_INVALID);
             }
         }
         return Integer.valueOf(input);
+    }
+
+
+    private static Boolean selectGameMode(Scanner scan) {
+        String input = null;
+        Boolean noPrunning = false;
+        Boolean hasPrunning = false;
+
+        while (input == null || (!noPrunning && !hasPrunning)) {
+            System.out.print(GameProperties.MSG_GAME_MODE);
+            input = scan.next();
+
+            noPrunning = input.matches("^1$");
+            hasPrunning = input.matches("^2$");
+            if (!noPrunning && !hasPrunning) {
+                System.out.println(GameProperties.MSG_INVALID);
+            }
+        }
+        return hasPrunning;
     }
 
     private static Boolean readFirstPlayer(Scanner scan) {
@@ -63,13 +85,13 @@ public class Main {
         boolean isFalse = false;
 
         while (input == null || (!isTrue && !isFalse)) {
-            System.out.print(GameMain.MSG_FIRST_PLAYER);
+            System.out.print(GameProperties.MSG_FIRST_PLAYER);
             input = scan.next();
 
             isTrue = input.matches("s|S");
             isFalse = input.matches("n|N");
             if (!isTrue && !isFalse) {
-                System.out.println(GameMain.MSG_INVALID);
+                System.out.println(GameProperties.MSG_INVALID);
             }
         }
         return isTrue;
@@ -97,5 +119,4 @@ public class Main {
                 .forEach(value -> System.out.print(format(" %d", value)));
         System.out.println();
     }
-
 }

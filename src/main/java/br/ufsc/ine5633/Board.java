@@ -1,7 +1,7 @@
 package br.ufsc.ine5633;
 
-import static br.ufsc.ine5633.GameMain.COLS;
-import static br.ufsc.ine5633.GameMain.ROWS;
+import static br.ufsc.ine5633.GameProperties.COLS;
+import static br.ufsc.ine5633.GameProperties.ROWS;
 
 public class Board {
 
