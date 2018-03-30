@@ -7,9 +7,6 @@ import java.util.LinkedList;
 
 import static java.lang.Math.min;
 
-/**
- * br.ufsc.ine5633.AIPlayer using Minimax algorithm
- */
 public class AIPlayerMinimax extends AIPlayer {
 
     private int evalueteCount = 0;
@@ -54,10 +51,6 @@ public class AIPlayerMinimax extends AIPlayer {
         System.out.println(String.format("\nMédia do total de iterações: %d", allNodes));
     }
 
-    /**
-     * Recursive minimaxWithAlfaBeta at level of depth for either maximizing or minimizing player.
-     * Return int[3] of {score, row, col}
-     */
     private int[] minimax(int depth, Seed player) {
         // Generate possible next moves in a List of int[2] of {row, col}.
         Collection<Coordinate> nextMoves = generateMoves();
@@ -99,10 +92,6 @@ public class AIPlayerMinimax extends AIPlayer {
         return new int[]{bestScore, bestRow, bestCol};
     }
 
-    /**
-     * Recursive minimaxWithAlfaBeta at level of depth for either maximizing or minimizing player.
-     * Return int[3] of {score, row, col}
-     */
     private int[] minimaxWithAlfaBeta(int depth, Seed player, int alpha, int beta) {
         // Generate possible next moves in a list of int[2] of {row, col}.
         Collection<Coordinate> nextMoves = generateMoves();
@@ -146,11 +135,6 @@ public class AIPlayerMinimax extends AIPlayer {
             return new int[]{(player == mySeed) ? alpha : beta, bestCol};
         }
     }
-
-    /**
-     * Find all valid next moves.
-     * Return Set of moves in int[2] of {row, col} or empty set if gameover
-     */
     private Collection<Coordinate> generateMoves() {
         Collection<Coordinate> nextMoves = new LinkedList<>(); // allocate List
 
