@@ -1,7 +1,7 @@
 # Connect-four with minmax alpha beta pruning #
 
-This project has a implementation of minmax alpha beta pruning algorithm that solve the connect-four problem.
+Este projeto tem uma implementação do algoritmo de poda minmax alpha beta que resolve o problema de conexão-quatro.
 
-The implementation don't contais GUI. It's text mode.
+A implementação não contém a GUI. A interface existente é modo texto.
 
-The project was created as a graduation project.
+O projeto foi criado como um projeto de graduação para a matéria de Sistemas Inteligentes - UFSC.
